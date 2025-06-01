@@ -1,0 +1,22 @@
+<h1>Prévision des commandes pour {{ product.name }}</h1>
+
+{% if graph_base64 %}
+    <img src="data:image/png;base64,{{ graph_base64 }}" alt="Graphique prévision">
+{% endif %}
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <tr>
+        <th>Date</th>
+        <th>Quantité prévue</th>
+    </tr>
+    {% if previsions %}
+        {% for date, qty in previsions %}
+        <tr>
+            <td>{{ date }}</td>
+            <td>{{ qty }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr><td colspan="2">Pas assez de données pour la prévision.</td></tr>
+    {% endif %}
+</table>

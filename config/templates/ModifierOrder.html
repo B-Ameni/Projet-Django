@@ -1,0 +1,31 @@
+{# templates/edit_order.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modifier Commande</title>
+</head>
+<body>
+    <h1>Modifier Commande #{{ order.id }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        <table border="1">
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Supprimer</th>
+            </tr>
+            {% for item_form in formset %}
+            <tr>
+                <td>{{ item_form.product }}</td>
+                <td>{{ item_form.quantity }}</td>
+                <td>{{ item_form.DELETE }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Sauvegarder</button>
+    </form>
+    <a href="{% url 'order_list' %}">Retour aux commandes</a>
+</body>
+</html>

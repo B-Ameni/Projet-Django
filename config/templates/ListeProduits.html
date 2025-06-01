@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Produits</title>
+</head>
+<body>
+    <h1>Liste des Produits</h1>
+
+    <form method="POST" action="{% url 'add_product' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Nom du produit" required>
+        <input type="number" name="price" placeholder="Prix" step="0.01" required>
+        <input type="number" name="stock" placeholder="Stock" min="0" required>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <!-- Nouveau formulaire pour créer la commande à partir des quantités -->
+    <form method="POST" action="{% url 'create_order_from_products' %}">
+        {% csrf_token %}
+
+        <table border="1" style="margin-top: 10px;">
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Quantité à commander</th>
+                <th>Supprimer</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }} TND</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    <input
+                        type="number"
+                        name="quantity_{{ product.id }}"
+                        min="0"
+                        max="{{ product.stock }}"
+                        value="0"
+                    >
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'delete_product' product.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+                <button type="submit" style="margin-top: 15px;">Créer une commande avec les produits sélectionnés</button>
+    </form>
+
+</body>
+</html>

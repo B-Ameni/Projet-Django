@@ -1,0 +1,59 @@
+<!-- templates/Orders.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Commandes</title>
+</head>
+<body>
+    <h1>Liste des Commandes</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Utilisateur</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Produits</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td>
+                <ul>
+                    {% for item in order.items.all %}
+                    <li>{{ item.quantity }} x {{ item.product.name }} ({{ item.subtotal }} TND)</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ order.total_price }} TND</td>
+            <td>
+                <form method="POST" action="{% url 'delete_order' order.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Supprimer</button>
+                </form>
+                
+                 <td>
+      {% if order.status != "Livrée" %}
+        <form method="POST" action="{% url 'update_order_status' order.id %}" style="display:inline;">
+          {% csrf_token %}
+          <select name="status" required>
+            <option value="">-- Choisir statut --</option>
+            <option value="Confirmée">Confirmée</option>
+            <option value="Livrée">Livrée</option>
+          </select>
+          <button type="submit">Changer</button>
+        </form>
+      {% else %}
+        <span>Statut final : Livrée</span>
+      {% endif %}
+    </td>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
